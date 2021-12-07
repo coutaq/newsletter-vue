@@ -1,7 +1,4 @@
-import {contextBridge} from 'electron';
-
-import type {BinaryLike} from 'crypto';
-import {createHash} from 'crypto';
+import {contextBridge, ipcRenderer} from 'electron';
 
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
@@ -26,15 +23,18 @@ import {createHash} from 'crypto';
  */
 contextBridge.exposeInMainWorld('versions', process.versions);
 
-/**
- * Safe expose node.js API
- * @example
- * window.nodeCrypto('data')
- */
-contextBridge.exposeInMainWorld('nodeCrypto', {
-  sha256sum(data: BinaryLike) {
-    const hash = createHash('sha256');
-    hash.update(data);
-    return hash.digest('hex');
+contextBridge.exposeInMainWorld('ipcRenderer', {
+  send: (channel, data) => {
+    let validChannels = ['change-theme'] // <-- Array of all ipcRenderer Channels used in the client
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data)
+    }
   },
-});
+  receive: (channel, func) => {
+    let validChannels = ['change-theme'] // <-- Array of all ipcMain Channels used in the electron
+    if (validChannels.includes(channel)) {
+      // Deliberately strip event as it includes `sender`
+      ipcRenderer.on(channel, (event, ...args) => func(...args))
+    }
+  }
+})

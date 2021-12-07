@@ -1,31 +1,43 @@
 <template>
-  <img
-    alt="Vue logo"
-    src="../assets/logo.svg"
-    width="300"
-  >
-  <app-navigation />
-  <router-view />
+  <main class="flex flex-col items-center bg-gray-50 dark:bg-gray-900">
+    <router-view v-slot="{ Component, route }">
+      <transition :name="route.meta.transitionName">
+        <component :is="Component" :key="route.path" />
+      </transition>
+    </router-view>
+  </main>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import AppNavigation from '/@/components/AppNavigation.vue';
+import { defineComponent } from "vue";
 export default defineComponent({
-  name: 'App',
-  components: {
-    AppNavigation,
-  },
+  name: "App",
+  mounted() {
+    window.ipcRenderer.receive('change-theme', () => {
+      const html = document?.querySelector("html")
+      if (html?.classList.contains("dark")) {
+        html?.classList.remove("dark");
+      } else {
+        html?.classList.add("dark");
+      }
+    })
+  }
 });
 </script>
 
 <style>
+:root {
+  --top: 60px;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir Next Cyr Medium, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: calc(80vh-var(--top));
+}
+main {
+  height: 100vh;
 }
 </style>

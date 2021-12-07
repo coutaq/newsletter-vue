@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+   font-family: 'Avenir Next Cyr Thin';
+   src: url('assets/AvenirNextCyr-Thin.eot');
+   src: url('assets/AvenirNextCyr-Thin.eot?#iefix') format('embedded-opentype'),
+   url('assets/AvenirNextCyr-Thin.woff') format('woff'),
+   url('assets/AvenirNextCyr-Thin.ttf') format('truetype');
+   font-weight: normal;
+   font-style: normal;
+   }
+
+   @font-face {
+      font-family: 'Avenir Next Cyr Light';
+      src: url('assets/AvenirNextCyr-Light.eot');
+      src: url('assets/AvenirNextCyr-Light.eot?#iefix') format('embedded-opentype'),
+      url('assets/AvenirNextCyr-Light.woff') format('woff'),
+      url('assets/AvenirNextCyr-Light.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
+      @font-face {
+         font-family: 'Avenir Next Cyr Medium';
+         src: url('assets/AvenirNextCyr-Medium.eot');
+         src: url('assets/AvenirNextCyr-Medium.eot?#iefix') format('embedded-opentype'),
+         url('assets/AvenirNextCyr-Medium.woff') format('woff'),
+         url('assets/AvenirNextCyr-Medium.ttf') format('truetype');
+         font-weight: normal;
+         font-style: normal;
+         }
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+ }
+ webview {
+    display: block;   /* iframes are inline by default */
+    border: none;     /* Reset default border */
+    height: 80vh;     /* Viewport-relative units */
+    width: 95vw;
+  }
+  .component-fade-enter-active,
+.component-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+  opacity: 0;
+}

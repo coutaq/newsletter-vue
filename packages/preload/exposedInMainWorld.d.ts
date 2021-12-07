@@ -5,10 +5,5 @@ interface Window {
      * console.log( window.versions )
      */
     readonly versions: NodeJS.ProcessVersions;
-    /**
-     * Safe expose node.js API
-     * @example
-     * window.nodeCrypto('data')
-     */
-    readonly nodeCrypto: { sha256sum(data: import("crypto").BinaryLike): string; };
+    readonly ipcRenderer: { send: (channel: any, data: any) => void; receive: (channel: any, func: any) => void; };
 }
