@@ -1,14 +1,15 @@
 <template>
-    <div style="width:50ch" class="m-auto">
-        <div>This is the home page</div>
-        <router-link to="/">Log out</router-link>
+    <div>
+        <p>тут у нас отчет хз</p>
     </div>
 </template>
 <script lang= "ts">
 import { RouterLink } from "vue-router";
+import HeaderComponent from "/@/components/Header.vue"
 export default {
     components: {
-        RouterLink
+        RouterLink, HeaderComponent
+
     }
 };
 </script>

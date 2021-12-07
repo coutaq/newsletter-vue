@@ -6,6 +6,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      tableLayout: ["hover", "focus"],
       letterSpacing: ["hover", "focus"],
     },
   },

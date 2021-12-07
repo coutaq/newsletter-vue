@@ -1,7 +1,7 @@
 <template>
-  <main class="flex flex-col items-center bg-gray-50 dark:bg-gray-900">
+  <main class="flex flex-col items-center bg-gray-100 dark:bg-gray-900">
     <router-view v-slot="{ Component, route }">
-      <transition :name="route.meta.transition || 'fade'" mode="out-in">
+      <transition :name="route.meta.transitionName" mode="out-in">
         <component :is="Component" />
       </transition>
     </router-view>

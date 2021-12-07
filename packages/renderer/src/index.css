@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+::-webkit-scrollbar { display: none; }
 @font-face {
    font-family: 'Avenir Next Cyr Thin';
    src: url('assets/AvenirNextCyr-Thin.eot');
@@ -41,6 +41,7 @@ html, body {
     border: none;     /* Reset default border */
     height: 80vh;     /* Viewport-relative units */
     width: 95vw;
+   
   }
 
 
@@ -60,3 +61,40 @@ html, body {
     transform: translateX(-100vw);
     opacity: 0;
   }
+  .slide-right-enter-active {
+    
+    transition: all 0.1s ease-out;
+  }
+  
+  .slide-right-leave-active {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .slide-right-enter-from{
+    transform: translateX(-100vw);
+  }
+  .slide-right-leave-to {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+
+  .noselect{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+  }
+
+  .list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from{
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.list-leave-to {
+  transform: translateY(10px);
+}

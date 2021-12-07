@@ -86,7 +86,6 @@ export default {
     },
 
     auth() {
-      console.log("auth")
       var self = this;
       axios
         .post('http://localhost:5000/auth', {
@@ -110,7 +109,7 @@ export default {
         });
     },
     goToHome() {
-      this.$router.push("/home")
+      this.$router.push("/admin/")
     }
   }
 };
