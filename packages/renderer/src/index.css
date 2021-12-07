@@ -42,12 +42,21 @@ html, body {
     height: 80vh;     /* Viewport-relative units */
     width: 95vw;
   }
-  .component-fade-enter-active,
-.component-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
 
-.component-fade-enter-from,
-.component-fade-leave-to {
-  opacity: 0;
-}
+
+  .slide-left-enter-active {
+    
+    transition: all 0.1s ease-out;
+  }
+  
+  .slide-left-leave-active {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .slide-left-enter-from{
+    transform: translateX(100vw);
+  }
+  .slide-left-leave-to {
+    transform: translateX(-100vw);
+    opacity: 0;
+  }

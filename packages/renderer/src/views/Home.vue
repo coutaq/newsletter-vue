@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
-            <h1>Welcome Home!</h1>
-        </div>
+    <div style="width:50ch" class="m-auto">
+        <div>This is the home page</div>
         <router-link to="/">Log out</router-link>
     </div>
 </template>

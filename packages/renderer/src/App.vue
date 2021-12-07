@@ -1,8 +1,8 @@
 <template>
   <main class="flex flex-col items-center bg-gray-50 dark:bg-gray-900">
     <router-view v-slot="{ Component, route }">
-      <transition :name="route.meta.transitionName">
-        <component :is="Component" :key="route.path" />
+      <transition :name="route.meta.transition || 'fade'" mode="out-in">
+        <component :is="Component" />
       </transition>
     </router-view>
   </main>
