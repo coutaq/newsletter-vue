@@ -1,4 +1,13 @@
-import { app, BrowserWindow, shell, Menu } from "electron";
+import {
+  app,
+  BrowserWindow,
+  shell,
+  Menu,
+  dialog,
+  ipcMain,
+  FileFilter,
+} from "electron";
+const fs = require("fs");
 import { join } from "path";
 import { URL } from "url";
 
@@ -10,7 +19,6 @@ if (!isSingleInstance) {
   app.quit();
   process.exit(0);
 }
-
 app.disableHardwareAcceleration();
 
 // Install "Vue.js devtools"
@@ -40,6 +48,22 @@ const createWindow = async () => {
       preload: join(__dirname, "../../preload/dist/index.cjs"),
     },
   });
+
+  ipcMain.on("save-model", (event, arg) => {
+    const saveOptions = {
+      title: "Сохранить в файл",
+      filters: [{ name: "JavaScript Object Notation", extensions: ["json"] }],
+      properties: ["createDirectory", "showOverwriteConfirmation"],
+    };
+    dialog.showSaveDialog(mainWindow, saveOptions).then((filename) => {
+      console.log(filename);
+      try {
+        fs.writeFileSync(filename.filePath, arg, "utf-8");
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  });
   const template = [
     // { role: 'appMenu' }
     ...(isMac
@@ -68,10 +92,16 @@ const createWindow = async () => {
           ? { label: "Выход", role: "close" }
           : { label: "Выход", role: "quit" },
         {
+          label: "Выход из аккаунта",
+          click: () => {
+            mainWindow?.webContents.send("logout");
+          },
+        },
+        {
           label: "Напечатать",
           role: "print",
           click: () => {
-            mainWindow.webContents.print(options, (success, failureReason) => {
+            mainWindow?.webContents.print(options, (success, failureReason) => {
               if (!success) console.log("fail:", failureReason);
 
               console.log("Print Initiated");
@@ -155,6 +185,7 @@ const createWindow = async () => {
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
+
   /**
    * If you install `show: true` then it can cause issues when trying to close the window.
    * Use `show: false` and listener events `ready-to-show` to fix these issues.
@@ -220,6 +251,7 @@ app.on("web-contents-created", (_event, contents) => {
       "https://github.com",
       "https://v3.vuejs.org",
       "http://localhost",
+      "http://109.254.85.64",
     ]);
     const { origin } = new URL(url);
     if (allowedOrigins.has(origin)) {

@@ -20,6 +20,7 @@ router.afterEach((to, from) => {
     const toDepth = to.path.split("/").length;
     const fromDepth = from.path.split("/").length;
     to.meta.transitionName = toDepth < fromDepth ? "slide-right" : "slide-left";
+    console.log("routing to ", to);
   }
 });
 

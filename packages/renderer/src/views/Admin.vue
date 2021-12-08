@@ -1,6 +1,6 @@
 <template>
     <header-component></header-component>
-    <router-view v-slot="{ Component, route }">
+    <router-view name="admin" v-slot="{ Component, route }">
         <transition :name="route.meta.transitionName" mode="out-in">
             <component :is="Component" />
         </transition>
