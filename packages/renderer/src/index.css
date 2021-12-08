@@ -1,3 +1,4 @@
+@media not print{
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,4 +98,8 @@ html, body {
 }
 .list-leave-to {
   transform: translateY(10px);
+}
+}
+
+@media print{
 }

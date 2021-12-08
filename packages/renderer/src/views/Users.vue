@@ -132,7 +132,7 @@ export default {
         loadData() {
             var self = this;
             axios
-                .get('http://localhost:5000/db/users').then(resp => {
+                .get('http://109.254.85.64:4000//db/users').then(resp => {
                     self.users = resp.data
                 })
         },
