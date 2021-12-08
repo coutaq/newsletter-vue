@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-col items-center bg-gray-100 dark:bg-gray-900">
-    <router-view v-slot="{ Component, route }">
+    <router-view name="main" v-slot="{ Component, route }">
       <transition :name="route.meta.transitionName" mode="out-in">
         <component :is="Component" />
       </transition>
@@ -13,6 +13,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "App",
   mounted() {
+    var self = this;
     window.ipcRenderer.receive('change-theme', () => {
       const html = document?.querySelector("html")
       if (html?.classList.contains("dark")) {
@@ -20,6 +21,12 @@ export default defineComponent({
       } else {
         html?.classList.add("dark");
       }
+    })
+    var user = localStorage.getItem('user')
+    window.ipcRenderer.receive('logout', () => {
+      localStorage.setItem('user', "")
+      self.$router.push('/auth')
+
     })
   }
 });

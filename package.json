@@ -45,6 +45,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "electron-updater": "4.6.5",
+    "fs": "^0.0.1-security",
     "vue": "3.2.24",
     "vue-router": "4.0.12"
   }

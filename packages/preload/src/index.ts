@@ -1,4 +1,4 @@
-import {contextBridge, ipcRenderer} from 'electron';
+import { contextBridge, ipcRenderer } from "electron";
 
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
@@ -21,20 +21,21 @@ import {contextBridge, ipcRenderer} from 'electron';
  * @example
  * console.log( window.versions )
  */
-contextBridge.exposeInMainWorld('versions', process.versions);
+contextBridge.exposeInMainWorld("versions", process.versions);
 
-contextBridge.exposeInMainWorld('ipcRenderer', {
+contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
-    let validChannels = ['change-theme'] // <-- Array of all ipcRenderer Channels used in the client
+    console.log("test");
+    let validChannels = ["change-theme", "save-model"]; // <-- Array of all ipcRenderer Channels used in the client
     if (validChannels.includes(channel)) {
-      ipcRenderer.send(channel, data)
+      ipcRenderer.send(channel, data);
     }
   },
   receive: (channel, func) => {
-    let validChannels = ['change-theme'] // <-- Array of all ipcMain Channels used in the electron
+    let validChannels = ["change-theme", "logout"]; // <-- Array of all ipcMain Channels used in the electron
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
-      ipcRenderer.on(channel, (event, ...args) => func(...args))
+      ipcRenderer.on(channel, (event, ...args) => func(...args));
     }
-  }
-})
+  },
+});
