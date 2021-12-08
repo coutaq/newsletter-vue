@@ -10,4 +10,5 @@ module.exports = {
       letterSpacing: ["hover", "focus"],
     },
   },
+  plugins: [],
 };

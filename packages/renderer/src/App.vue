@@ -31,6 +31,7 @@ export default defineComponent({
   }
 });
 </script>
+
 <style>
 :root {
   --top: 60px;
