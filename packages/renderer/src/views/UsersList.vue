@@ -3,21 +3,10 @@
         <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div class="pb-2">
                 <button
-                    @click="toggleAdd()"
+                    @click="this.$router.push('users/new')"
                     class="bg-blue-500 w-full dark:bg-blue-800 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                 >Добавить</button>
             </div>
-            <label class="block mb-5">
-                <span class="w-2/6 mr-5 text-gray-700">Категория:</span>
-                <select
-                    @change="filter"
-                    v-model="selected_cat"
-                    class="mt-1 w-4/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                >
-                    <option value="-1" selected>Без фильтра</option>
-                    <option v-for="categ in categs" :value="categ.id">{{ categ.title }}</option>
-                </select>
-            </label>
             <div
                 class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
             >
@@ -29,22 +18,24 @@
                             >Id</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >Наименование</th>
+                            >ФИО</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >Категория</th>
-
+                            >Логин</th>
+                            <th
+                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
+                            >Почта</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Действия</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-700">
+                    <transition-group name="list" tag="tbody" class="bg-white dark:bg-gray-700">
                         <tr
-                            @click="selected == cat.id ? selected = -1 : selected = cat.id"
-                            v-for="cat in categories"
-                            :key="cat.id"
-                            v-bind:class="{ 'bg-gray-300 dark:bg-gray-800 hover:bg-gray-300 hover:dark:bg-gray-800': selected == cat.id }"
+                            @click="selected == user.id ? selected = -1 : selected = user.id"
+                            v-for="user in users"
+                            :key="user.id"
+                            v-bind:class="{ 'bg-gray-300 dark:bg-gray-800 hover:bg-gray-300 hover:dark:bg-gray-800': selected == user.id }"
                             class="border hover:bg-gray-200 dark:hover:bg-gray-800"
                         >
                             <td
@@ -52,32 +43,49 @@
                             >
                                 <div
                                     class="text-sm leading-5 text-gray-500 dark:text-gray-200"
-                                >{{ cat.id }}</div>
+                                >{{ user.id }}</div>
                             </td>
                             <td
                                 class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
                             >
-                                <div class="ml-4">
-                                    <div
-                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
-                                    >{{ cat.title }}</div>
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 w-10 h-10">
+                                        <img
+                                            class="w-10 h-10 rounded-full"
+                                            :src="user.image"
+                                            alt="изображение пользователя"
+                                        />
+                                    </div>
+
+                                    <div class="ml-4">
+                                        <div
+                                            class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                        >{{ user.name }}</div>
+                                    </div>
                                 </div>
                             </td>
+
                             <td
                                 class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
                             >
-                                <div class="ml-4">
-                                    <div
-                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
-                                    >{{ cat.category }}</div>
-                                </div>
+                                <div
+                                    class="text-sm leading-5 text-gray-500 dark:text-gray-200"
+                                >{{ user.login }}</div>
+                            </td>
+
+                            <td
+                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
+                            >
+                                <div
+                                    class="text-sm leading-5 text-gray-500 dark:text-gray-200 dark:border-gray-900"
+                                >{{ user.email }}</div>
                             </td>
                             <td class="whitespace-no-wrap border-b dark:border-gray-900">
                                 <div
                                     class="flex items-center justify-center text-gray-800 dark:text-gray-200 dark:border-gray-900"
                                 >
                                     <svg
-                                        @click="saveToFile(cat)"
+                                        @click="saveToFile(user)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-purple-700"
                                         viewBox="0 0 20 20"
@@ -90,7 +98,6 @@
                                         />
                                     </svg>
                                     <svg
-                                        @click="toggleEdit(cat.id)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-yellow-600"
                                         viewBox="0 0 20 20"
@@ -101,7 +108,7 @@
                                         />
                                     </svg>
                                     <svg
-                                        @click="deleteSelected(cat)"
+                                        @click="deleteSelected(user)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-red-700"
                                         viewBox="0 0 20 20"
@@ -116,7 +123,7 @@
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
+                    </transition-group>
                 </table>
             </div>
         </div>
@@ -130,10 +137,8 @@ import { useSSRContext } from "@vue/runtime-core";
 export default {
     data() {
         return {
-            categories: [],
-            categs: [],
-            selected: -1,
-            selected_cat: -1
+            users: [],
+            selected: -1
         }
     },
     components: {
@@ -141,26 +146,27 @@ export default {
 
     },
     methods: {
+        handleInput(e) {
+            if (e.key === "Backspace" || e.key === "Delete") {
+                return e.preventDefault(); // Don't do anything to the input
+            }
+            const value = e.target.value;
+            console.log(value);
+            // do something with value
+        },
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64/newsletter/api/db/interests').then(resp => {
-                    console.log(resp)
-                    if (!Array.isArray(resp.data[0])) {
-                        self.categories = resp.data
-                    } else {
-                        self.categories = []
-                    }
-
+                .get('http://109.254.85.64:4000/db/users').then(resp => {
+                    self.users = resp.data
                 })
         },
-        deleteSelected(cat) {
-            if (confirm("Вы уверены что хотите удалить интерес " + cat.id + "?")) {
+        deleteSelected(user) {
+            if (confirm("Вы уверены что хотите удалить пользователя " + user.name + "?")) {
                 var self = this;
-                var url = 'http://109.254.85.64/newsletter/api/db/interests/' + cat.id
+                var url = 'http://109.254.85.64:4000/db/users/' + user.id
                 axios
                     .delete(url).then(resp => {
-                        console.log(resp)
                         self.loadData()
                     })
             }
@@ -168,36 +174,12 @@ export default {
         saveToFile(user) {
             window.ipcRenderer.send('save-model', JSON.stringify(user))
         },
-        toggleAdd() {
-            window.ipcRenderer.send('open-window', { route: "new-int", width: 400, height: 420 })
-        },
-        toggleEdit(id) {
-            window.ipcRenderer.send('open-window', {
-                route: 'edit-int/' + id, width: 400, height: 420
-            })
-
-        }, filter() {
-            if (this.selected_cat != -1) {
-                var self = this;
-                axios
-                    .get('http://109.254.85.64/newsletter/api/interests-filter/' + this.selected_cat).then(resp => {
-                        if (!Array.isArray(resp.data[0])) {
-                            self.categories = resp.data
-                        } else {
-                            self.categories = []
-                        }
-                    })
-            } else {
-                this.loadData()
-            }
-
+        handleDelete() {
+            console.log("Backspace / Del pressed");
         }
     },
-    async mounted() {
-        this.categs = (await axios.get('http://109.254.85.64/newsletter/api/db/categories')).data
-        window.ipcRenderer.receive('reload', () => {
-            this.loadData()
-        })
+    mounted() {
+        console.log(this.$router.options.routes)
         this.loadData()
     }
 };

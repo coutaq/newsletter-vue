@@ -32,7 +32,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
     }
   },
   receive: (channel, func) => {
-    let validChannels = ["change-theme", "logout", "reload"]; // <-- Array of all ipcMain Channels used in the electron
+    let validChannels = ["change-theme", "logout", "reload", "save-excel"]; // <-- Array of all ipcMain Channels used in the electron
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
       ipcRenderer.on(channel, (event, ...args) => func(...args));

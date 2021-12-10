@@ -15,7 +15,7 @@
                         <tr>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >№</th>
+                            >Id</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Наименование</th>
@@ -119,15 +119,20 @@ export default {
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64/newsletter/api/db/categories').then(resp => {
+                .get('http://109.254.85.64/newsletter/api/db/categories') .then(resp => {
                     console.log(resp)
-                    self.categories = resp.data
+                    if (!Array.isArray(resp.data[0])) {
+                        self.categories = resp.data
+                    } else {
+                        self.categories = []
+                    }
+
                 })
         },
         deleteSelected(cat) {
-            if (confirm("Вы уверены что хотите удалить пост " + cat.title + "?")) {
+            if (confirm("Вы уверены что хотите удалить категорию " + cat.title + "?")) {
                 var self = this;
-                var url = 'http://109.254.85.64/newsletter/api/db/posts/' + cat.id
+                var url = 'http://109.254.85.64/newsletter/api/db/categories/' + cat.id
                 axios
                     .delete(url).then(resp => {
                         console.log(resp)

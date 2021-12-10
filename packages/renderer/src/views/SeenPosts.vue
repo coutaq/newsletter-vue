@@ -15,7 +15,7 @@
                         <tr>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >№</th>
+                            >Id</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Пользователь</th>
@@ -144,7 +144,12 @@ export default {
             axios
                 .get('http://109.254.85.64/newsletter/api/db/seen').then(resp => {
                     console.log(resp)
-                    self.categories = resp.data
+                    if (!Array.isArray(resp.data[0])) {
+                        self.categories = resp.data
+                    } else {
+                        self.categories = []
+                    }
+
                 })
         },
         deleteSelected(cat) {

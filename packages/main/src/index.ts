@@ -41,6 +41,7 @@ let mainWindow: BrowserWindow | null = null;
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: 1336,
+    height: 840,
     show: false, // Use 'ready-to-show' event to show window
     webPreferences: {
       nodeIntegration: true,
@@ -118,6 +119,12 @@ const createWindow = async () => {
           label: "Выход из аккаунта",
           click: () => {
             mainWindow?.webContents.send("logout");
+          },
+        },
+        {
+          label: "Сохранить в Excel",
+          click: () => {
+            mainWindow?.webContents.send("save-excel", "test.xsls");
           },
         },
         {

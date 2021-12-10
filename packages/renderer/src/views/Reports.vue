@@ -11,7 +11,7 @@
                     <tr>
                         <th
                             class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                        >№</th>
+                        >Id</th>
                         <th
                             class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                         >Наименование</th>
@@ -106,31 +106,73 @@
                 </transition-group>
             </table>
         </div>
+        <div
+            class="inline-flex flex-row overflow-hidden mt-3 border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
+        >
+            <div class="w-3/6">
+                <h1 class="py-2 text-xl dark:text-white dark:bg-gray-800">График просмотров</h1>
+                <line-chart :data="views" :data-keys="['date', 'views']"></line-chart>
+            </div>
+            <div class="w-3/6">
+                <h1
+                    class="py-2 text-xl dark:text-white dark:bg-gray-800"
+                >Процент просмотров по интересам</h1>
+                <pie-chart :data="views_by_interest" :data-keys="['interest', 'views']"></pie-chart>
+            </div>
+        </div>
     </div>
 </template>
 <script lang= "ts">
 import { RouterLink } from "vue-router";
 import HeaderComponent from "/@/components/Header.vue"
 import axios from "axios";
+import LineChart from "/@/components/LineChart.vue";
+import PieChart from "/@/components/PieChart.vue";
 export default {
     data() {
         return {
             posts: [],
-            users: {}
+            users: {},
+            views: [],
+            views_by_interest: []
         }
     },
     components: {
-        RouterLink, HeaderComponent
+        RouterLink, HeaderComponent, LineChart, PieChart
 
-    }, mounted() {
+    }, created() {
+        console.log("loading data")
         var self = this
         axios.get("http://109.254.85.64/newsletter/api/getReport").then((res) => {
-            console.log(res)
-            var users = res.data.users
-            var fields = Object.keys(users[0])
-            console.log(users)
-            self.posts = res.data.top_posts
-            self.users = { 'fields': fields.splice(0, fields.length - 1), 'matrix': users }
+            console.log("loading data")
+            console.log("test", res)
+            var usersd = res.data.users
+            if (Array.isArray(usersd)) {
+                var fields = Object.keys(usersd[0])
+            } else {
+                var fields = Object.keys(usersd)
+            }
+            console.log('users: ', usersd)
+
+            if (Array.isArray(res.data.top_posts)) {
+                self.posts = res.data.top_posts
+            } else {
+                self.posts = [res.data.top_posts]
+            }
+
+            self.users = { 'fields': fields.splice(0, fields.length - 1), 'matrix': Array.isArray(usersd) ? usersd : [usersd] }
+            if (Array.isArray(res.data.views)) {
+                self.views = res.data.views
+            } else {
+                self.views = [res.data.views]
+            }
+            if (Array.isArray(res.data.views_by_interest)) {
+                self.views_by_interest = res.data.views_by_interest
+            } else {
+                self.views_by_interest = [res.data.views_by_interest]
+            }
+        }).catch(e => {
+            console.error("WTF: ", e)
         })
     }
 };

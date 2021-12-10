@@ -26,7 +26,7 @@
                         <tr>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >№</th>
+                            >Id</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Наименование</th>
@@ -139,6 +139,7 @@ import { RouterLink } from "vue-router";
 import HeaderComponent from "/@/components/Header.vue"
 import axios from "axios";
 import { useSSRContext } from "@vue/runtime-core";
+// const ExportJsonExcel = require("js-export-excel");
 export default {
     data() {
         return {
@@ -158,7 +159,12 @@ export default {
             axios
                 .get('http://109.254.85.64/newsletter/api/db/posts').then(resp => {
                     console.log(resp)
-                    self.categories = resp.data
+                    if (!Array.isArray(resp.data[0])) {
+                        self.categories = resp.data
+                    } else {
+                        self.categories = []
+                    }
+
                 })
         },
         deleteSelected(cat) {
@@ -188,8 +194,11 @@ export default {
                 var self = this;
                 axios
                     .get('http://109.254.85.64/newsletter/api/posts-filter/' + this.selected_cat).then(resp => {
-                        console.log(resp)
-                        self.categories = resp.data
+                        if (!Array.isArray(resp.data[0])) {
+                            self.categories = resp.data
+                        } else {
+                            self.categories = []
+                        }
                     })
             } else {
                 this.loadData()
@@ -198,9 +207,29 @@ export default {
         }
     },
     async mounted() {
+        var self = this
         this.categs = (await axios.get('http://109.254.85.64/newsletter/api/db/interests')).data
         window.ipcRenderer.receive('reload', () => {
             this.loadData()
+        })
+        window.ipcRenderer.receive('save-excel', (filename) => {
+            console.log("test")
+            var option = {};
+
+            option.fileName = "excel";
+
+            option.datas = [
+                {
+                    sheetData: self.categs,
+                    sheetName: "sheet",
+                    sheetFilter: ["two", "one"],
+                    sheetHeader: ["第一列", "第二列"],
+                    columnWidths: [20, 20],
+                },
+            ];
+
+            var toExcel = new ExportJsonExcel(option); //new
+            toExcel.saveExcel(); //保存
         })
         this.loadData()
     }
