@@ -6,6 +6,7 @@ import "./index.css";
 var headerRoutes = [
   "/categories",
   "/interests",
+  "/dbusers",
   "/users",
   "/posts",
   "/roles",
@@ -19,7 +20,7 @@ router.afterEach((to, from) => {
   } else {
     const toDepth = to.path.split("/").length;
     const fromDepth = from.path.split("/").length;
-    to.meta.transitionName = toDepth < fromDepth ? "slide-right" : "slide-left";
+    to.meta.transitionName = "fade";
     console.log("routing to ", to);
   }
 });

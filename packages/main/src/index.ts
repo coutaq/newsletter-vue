@@ -40,6 +40,7 @@ let mainWindow: BrowserWindow | null = null;
 
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
+    width: 1336,
     show: false, // Use 'ready-to-show' event to show window
     webPreferences: {
       nodeIntegration: true,
@@ -48,7 +49,29 @@ const createWindow = async () => {
       preload: join(__dirname, "../../preload/dist/index.cjs"),
     },
   });
-
+  ipcMain.on("open-window", (event, arg) => {
+    let route = arg.route;
+    const modalPath =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000/#/" + route
+        : `file://${__dirname}/index.html#` + route;
+    let win = new BrowserWindow({
+      width: arg.width,
+      height: arg.height,
+      webPreferences: {
+        webSecurity: false,
+        preload: join(__dirname, "../../preload/dist/index.cjs"),
+      },
+    });
+    win.on("close", function () {
+      win = null;
+    });
+    win.loadURL(modalPath);
+  });
+  ipcMain.on("reload", (event, arg) => {
+    console.log("reloading web");
+    mainWindow?.webContents.send("reload");
+  });
   ipcMain.on("save-model", (event, arg) => {
     const saveOptions = {
       title: "Сохранить в файл",
@@ -136,8 +159,14 @@ const createWindow = async () => {
     },
     // { role: 'viewMenu' }
     {
-      label: "View",
+      label: "Вид",
       submenu: [
+        {
+          label: "Обновить",
+          click: () => {
+            mainWindow?.webContents.send("reload");
+          },
+        },
         { role: "reload" },
         { role: "forceReload" },
         { role: "toggleDevTools" },
@@ -194,10 +223,6 @@ const createWindow = async () => {
    */
   mainWindow.on("ready-to-show", () => {
     mainWindow?.show();
-
-    if (isDevelopment) {
-      mainWindow?.webContents.openDevTools();
-    }
   });
 
   /**

@@ -88,7 +88,7 @@ export default {
     auth() {
       var self = this;
       axios
-        .post('http://109.254.85.64:4000/auth', {
+        .post('http://109.254.85.64/newsletter/api/auth', {
           login: self.form.login,
           password: self.form.password
         })

@@ -18,8 +18,13 @@
                             >№</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >Наименование</th>
-
+                            >Пользователь</th>
+                            <th
+                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
+                            >Пост</th>
+                            <th
+                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
+                            >Просмотрено?</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Действия</th>
@@ -46,7 +51,25 @@
                                 <div class="ml-4">
                                     <div
                                         class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
-                                    >{{ cat.title }}</div>
+                                    >{{ cat.user }}</div>
+                                </div>
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
+                            >
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                    >{{ cat.post }}</div>
+                                </div>
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
+                            >
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                    >{{ cat.opened ? "Да" : "Нет" }}</div>
                                 </div>
                             </td>
                             <td class="whitespace-no-wrap border-b dark:border-gray-900">
@@ -119,15 +142,15 @@ export default {
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64/newsletter/api/db/categories').then(resp => {
+                .get('http://109.254.85.64/newsletter/api/db/seen').then(resp => {
                     console.log(resp)
                     self.categories = resp.data
                 })
         },
         deleteSelected(cat) {
-            if (confirm("Вы уверены что хотите удалить пост " + cat.title + "?")) {
+            if (confirm("Вы уверены что хотите удалить запись " + cat.title + "?")) {
                 var self = this;
-                var url = 'http://109.254.85.64/newsletter/api/db/posts/' + cat.id
+                var url = 'http://109.254.85.64/newsletter/api/db/seen/' + cat.id
                 axios
                     .delete(url).then(resp => {
                         console.log(resp)
@@ -139,11 +162,11 @@ export default {
             window.ipcRenderer.send('save-model', JSON.stringify(user))
         },
         toggleAdd() {
-            window.ipcRenderer.send('open-window', { route: "new-cat", width: 400, height: 320 })
+            window.ipcRenderer.send('open-window', { route: "new-seen", width: 400, height: 500 })
         },
         toggleEdit(id) {
             window.ipcRenderer.send('open-window', {
-                route: 'edit-cat/' + id, width: 400, height: 320
+                route: 'edit-seen/' + id, width: 400, height: 500
             })
 
         }

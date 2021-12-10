@@ -37,10 +37,10 @@
                         v-if="!user.email && checked"
                         class="flex items-center font-medium tracking-wide text-red-500 mt-1 mb-1 ml-1"
                     >Поле не может быть пустым!</span>
-                    <span
+                    <!-- <span
                         v-if="!(user.email.includes('@') && user.email.includes('.')) && checked"
                         class="flex items-center font-medium tracking-wide text-red-500 ml-1"
-                    >Некорректный электронный адрес!</span>
+                    >Некорректный электронный адрес!</span>-->
                 </label>
 
                 <label class="block">
@@ -50,10 +50,10 @@
                         type="password"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     />
-                    <span
+                    <!--<span
                         v-if="user.password.length < 8 && checked"
                         class="flex items-center font-medium tracking-wide text-red-500 mt-1 ml-1"
-                    >Пароль слишком короткий!</span>
+                    >Пароль слишком короткий!</span>-->
                 </label>
                 <label class="block">
                     <div class="p-3">
@@ -88,7 +88,7 @@
                             <button
                                 @click="createUser"
                                 class="w-full h-12 text-lg w-32 bg-blue-600 rounded text-white hover:bg-blue-700"
-                            >Добавить</button>
+                            >Сохранить</button>
                         </div>
                     </div>
                 </label>
@@ -100,11 +100,12 @@
 import { RouterLink } from "vue-router";
 import axios from "axios";
 export default {
+    props: ['id'],
     data() {
         return {
             checked: false,
-            user: { email: "", password: "" },
-            image: null,
+            user: {},
+            image: {},
             fileLoaded: false
         }
     },
@@ -115,29 +116,28 @@ export default {
     methods: {
         addFile(event) {
             this.image = event.target.files[0]
-            this.user.image = 'http://109.254.85.64/newsletter/assets/' + this.user.login
+            this.user.image = 'http://109.254.85.64/newsletter/assets/' + event.target.files[0].name
         },
         createUser() {
 
             this.checked = true
             if (!this.user.login) return
             if (!this.user.email) return
-            if (!this.user.password) return
             if (!this.user.name) return
-            if (this.user.password.length < 8) return
             if (!(this.user.email.includes('@') || this.user.email.includes('.'))) return
-            this.user.image = 'http://109.254.85.64/newsletter/assets/' + this.user.login + ".png"
-            axios.post('http://109.254.85.64/newsletter/api/db/users', this.user).then((resp) => {
+            axios.put('http://109.254.85.64/newsletter/api/db/users/' + this.id, this.user).then((resp) => {
                 console.log(resp)
             }).catch((e) => {
-                alert("Такой пользователь уже существует!")
+                alert("Произошла ошибка сервера!")
             })
-            this.uploadImage()
+            if (this.fileLoaded) {
+                this.uploadImage()
+            }
             window.ipcRenderer.send('reload', '')
         },
         uploadImage() {
             const formData = new FormData()
-            formData.append('file', this.renameFile(this.image, this.user.login + ".png"))
+            formData.append('file', this.renameFile(image, this.user.login + ".png"))
             axios.post('http://109.254.85.64/newsletter/api/upload-file', formData).then((resp) => {
                 console.log(resp)
 
@@ -152,8 +152,15 @@ export default {
             });
         }
     },
-    mounted() {
-        console.log("wtf")
+    created() {
+        var self = this
+        axios.get('http://109.254.85.64/newsletter/api/db/users/' + this.id).then((res) => {
+            console.log(res)
+            self.user = res.data
+            delete self.user.password
+            self.image.path = self.user.image
+            delete self.user.image
+        })
     }
 };
 </script>

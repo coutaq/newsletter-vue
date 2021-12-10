@@ -10,5 +10,5 @@ module.exports = {
       letterSpacing: ["hover", "focus"],
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

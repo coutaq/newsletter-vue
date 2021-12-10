@@ -3,7 +3,7 @@
         <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div class="pb-2">
                 <button
-                    @click="this.$router.push('users/new')"
+                    @click="toggleAdd()"
                     class="bg-blue-500 w-full dark:bg-blue-800 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                 >Добавить</button>
             </div>
@@ -30,7 +30,7 @@
                             >Действия</th>
                         </tr>
                     </thead>
-                    <transition-group name="list" tag="tbody" class="bg-white dark:bg-gray-700">
+                    <tbody class="bg-white dark:bg-gray-700">
                         <tr
                             @click="selected == user.id ? selected = -1 : selected = user.id"
                             v-for="user in users"
@@ -98,6 +98,7 @@
                                         />
                                     </svg>
                                     <svg
+                                        @click="toggleEdit(user.id)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-yellow-600"
                                         viewBox="0 0 20 20"
@@ -123,7 +124,7 @@
                                 </div>
                             </td>
                         </tr>
-                    </transition-group>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -146,27 +147,22 @@ export default {
 
     },
     methods: {
-        handleInput(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return e.preventDefault(); // Don't do anything to the input
-            }
-            const value = e.target.value;
-            console.log(value);
-            // do something with value
-        },
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64:4000/db/users').then(resp => {
+                .get('http://109.254.85.64/newsletter/api/db/users').then(resp => {
+                    console.log(resp)
                     self.users = resp.data
                 })
         },
         deleteSelected(user) {
             if (confirm("Вы уверены что хотите удалить пользователя " + user.name + "?")) {
                 var self = this;
-                var url = 'http://109.254.85.64:4000/db/users/' + user.id
+                console.log("de;")
+                var url = 'http://109.254.85.64/newsletter/api/db/users/' + user.id
                 axios
                     .delete(url).then(resp => {
+                        console.log(resp)
                         self.loadData()
                     })
             }
@@ -174,12 +170,20 @@ export default {
         saveToFile(user) {
             window.ipcRenderer.send('save-model', JSON.stringify(user))
         },
-        handleDelete() {
-            console.log("Backspace / Del pressed");
+        toggleAdd() {
+            window.ipcRenderer.send('open-window', { route: "new-user", width: 400, height: 800 })
+        },
+        toggleEdit(id) {
+            window.ipcRenderer.send('open-window', {
+                route: 'edit-user/' + id, width: 400, height: 800
+            })
+
         }
     },
     mounted() {
-        console.log(this.$router.options.routes)
+        window.ipcRenderer.receive('reload', () => {
+            this.loadData()
+        })
         this.loadData()
     }
 };

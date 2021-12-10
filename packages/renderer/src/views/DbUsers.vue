@@ -3,7 +3,7 @@
         <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div class="pb-2">
                 <button
-                    @click="this.$router.push('users/new')"
+                    @click="toggleAdd()"
                     class="bg-blue-500 w-full dark:bg-blue-800 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
                 >Добавить</button>
             </div>
@@ -21,21 +21,15 @@
                             >ФИО</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >Логин</th>
-                            <th
-                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
-                            >Почта</th>
-                            <th
-                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Действия</th>
                         </tr>
                     </thead>
                     <transition-group name="list" tag="tbody" class="bg-white dark:bg-gray-700">
                         <tr
-                            @click="selected == user.id ? selected = -1 : selected = user.id"
-                            v-for="user in users"
-                            :key="user.id"
-                            v-bind:class="{ 'bg-gray-300 dark:bg-gray-800 hover:bg-gray-300 hover:dark:bg-gray-800': selected == user.id }"
+                            @click="selected == cat.id ? selected = -1 : selected = cat.id"
+                            v-for="cat in categories"
+                            :key="cat.id"
+                            v-bind:class="{ 'bg-gray-300 dark:bg-gray-800 hover:bg-gray-300 hover:dark:bg-gray-800': selected == cat.id }"
                             class="border hover:bg-gray-200 dark:hover:bg-gray-800"
                         >
                             <td
@@ -43,49 +37,24 @@
                             >
                                 <div
                                     class="text-sm leading-5 text-gray-500 dark:text-gray-200"
-                                >{{ user.id }}</div>
+                                >{{ cat.id }}</div>
                             </td>
                             <td
                                 class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
                             >
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 w-10 h-10">
-                                        <img
-                                            class="w-10 h-10 rounded-full"
-                                            :src="user.image"
-                                            alt="изображение пользователя"
-                                        />
-                                    </div>
-
-                                    <div class="ml-4">
-                                        <div
-                                            class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
-                                        >{{ user.name }}</div>
-                                    </div>
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                    >{{ cat.name }}</div>
                                 </div>
                             </td>
 
-                            <td
-                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
-                            >
-                                <div
-                                    class="text-sm leading-5 text-gray-500 dark:text-gray-200"
-                                >{{ user.login }}</div>
-                            </td>
-
-                            <td
-                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
-                            >
-                                <div
-                                    class="text-sm leading-5 text-gray-500 dark:text-gray-200 dark:border-gray-900"
-                                >{{ user.email }}</div>
-                            </td>
                             <td class="whitespace-no-wrap border-b dark:border-gray-900">
                                 <div
                                     class="flex items-center justify-center text-gray-800 dark:text-gray-200 dark:border-gray-900"
                                 >
                                     <svg
-                                        @click="saveToFile(user)"
+                                        @click="saveToFile(cat)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-purple-700"
                                         viewBox="0 0 20 20"
@@ -98,6 +67,7 @@
                                         />
                                     </svg>
                                     <svg
+                                        @click="toggleEdit(cat.id)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-yellow-600"
                                         viewBox="0 0 20 20"
@@ -108,7 +78,7 @@
                                         />
                                     </svg>
                                     <svg
-                                        @click="deleteSelected(user)"
+                                        @click="deleteSelected(cat)"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="h-5 w-5 hover:text-red-700"
                                         viewBox="0 0 20 20"
@@ -137,7 +107,7 @@ import { useSSRContext } from "@vue/runtime-core";
 export default {
     data() {
         return {
-            users: [],
+            categories: [],
             selected: -1
         }
     },
@@ -146,27 +116,21 @@ export default {
 
     },
     methods: {
-        handleInput(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return e.preventDefault(); // Don't do anything to the input
-            }
-            const value = e.target.value;
-            console.log(value);
-            // do something with value
-        },
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64:4000/db/users').then(resp => {
-                    self.users = resp.data
+                .get('http://109.254.85.64/newsletter/api/db/dbusers').then(resp => {
+                    console.log(resp)
+                    self.categories = resp.data
                 })
         },
-        deleteSelected(user) {
-            if (confirm("Вы уверены что хотите удалить пользователя " + user.name + "?")) {
+        deleteSelected(cat) {
+            if (confirm("Вы уверены что хотите удалить запись " + cat.title + "?")) {
                 var self = this;
-                var url = 'http://109.254.85.64:4000/db/users/' + user.id
+                var url = 'http://109.254.85.64/newsletter/api/db/dbusers/' + cat.id
                 axios
                     .delete(url).then(resp => {
+                        console.log(resp)
                         self.loadData()
                     })
             }
@@ -174,12 +138,20 @@ export default {
         saveToFile(user) {
             window.ipcRenderer.send('save-model', JSON.stringify(user))
         },
-        handleDelete() {
-            console.log("Backspace / Del pressed");
+        toggleAdd() {
+            window.ipcRenderer.send('open-window', { route: "new-cat", width: 400, height: 320 })
+        },
+        toggleEdit(id) {
+            window.ipcRenderer.send('open-window', {
+                route: 'edit-cat/' + id, width: 400, height: 320
+            })
+
         }
     },
     mounted() {
-        console.log(this.$router.options.routes)
+        window.ipcRenderer.receive('reload', () => {
+            this.loadData()
+        })
         this.loadData()
     }
 };

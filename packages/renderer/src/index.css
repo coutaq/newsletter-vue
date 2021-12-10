@@ -86,15 +86,3 @@ html, body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none;
   }
-
-  .list-enter-active,
-.list-leave-active {
-  transition: all 1s ease;
-}
-.list-enter-from{
-  opacity: 0;
-  transform: translateY(-10px);
-}
-.list-leave-to {
-  transform: translateY(10px);
-}
