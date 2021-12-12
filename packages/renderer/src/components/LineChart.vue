@@ -38,7 +38,7 @@ export default defineComponent({
                 type: 'band'
             },
             secondary: {
-                domain: ['dataMin', 'dataMax + 3'],
+                domain: ['dataMin', 'dataMax + max(dataMax/10, 5)'],
                 type: 'linear',
                 ticks: 8
             }

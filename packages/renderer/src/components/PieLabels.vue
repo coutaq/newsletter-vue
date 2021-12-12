@@ -3,16 +3,16 @@
         <g v-for="(p, i) in dataKeys" :key="i">
             <circle
                 :fill="colors[dataKeys.indexOf(p)]"
-                :cx="100 - 10"
+                :cx="5"
                 :cy="(dataKeys.length * 22 - dataKeys.indexOf(p) * 22) - 7"
                 r="5"
             ></circle>
             <text
-                :x="100"
+                :x="10"
                 :y="dataKeys.length * 22 - dataKeys.indexOf(p) * 22"
                 text-anchor="left"
                 font-size="12"
-            >{{ p.interest }} - {{ dataKeys.reduce((previousValue: Number = 0, currentValue) => previousValue + parseInt(currentValue)) }}</text>
+            >{{ p.interest }} ({{ p.views }})</text>
         </g>
     </g>
 </template>

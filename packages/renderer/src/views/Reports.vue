@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="noselect">
         <div
-            class="inline-block min-w-full overflow-hidden align-middle mt-3 border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
+            class="inline-block min-w-full align-middle mt-3 border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
         >
             <h1
                 class="py-2 text-xl dark:text-white dark:bg-gray-800"
@@ -65,7 +65,7 @@
                 </tbody>
             </table>
         </div>
-        <div
+        <!-- <div
             class="inline-block min-w-full overflow-hidden align-middle mt-3 border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
         >
             <h1 class="py-2 text-xl dark:text-white dark:bg-gray-800">Матрица пользователей</h1>
@@ -85,7 +85,7 @@
                     <tr
                         v-for="entry in users.matrix"
                         :key="entry.user_id"
-                        class="border hover:bg-gray-200 dark:hover:bg-gray-800 dark:border-gray-900"
+                        class="bordser hover:bg-gray-200 dark:hover:bg-gray-800 dark:border-gray-900"
                     >
                         <td
                             class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
@@ -105,7 +105,7 @@
                     </tr>
                 </transition-group>
             </table>
-        </div>
+        </div>-->
         <div
             class="inline-flex flex-row overflow-hidden mt-3 border-b border-gray-200 dark:border-gray-900 shadow sm:rounded-lg"
         >
@@ -146,13 +146,13 @@ export default {
         axios.get("http://109.254.85.64/newsletter/api/getReport").then((res) => {
             console.log("loading data")
             console.log("test", res)
-            var usersd = res.data.users
-            if (Array.isArray(usersd)) {
-                var fields = Object.keys(usersd[0])
-            } else {
-                var fields = Object.keys(usersd)
-            }
-            console.log('users: ', usersd)
+            // var usersd = res.data.users
+            // if (Array.isArray(usersd)) {
+            //     var fields = Object.keys(usersd[0])
+            // } else {
+            //     var fields = Object.keys(usersd)
+            // }
+            // console.log('users: ', usersd)
 
             if (Array.isArray(res.data.top_posts)) {
                 self.posts = res.data.top_posts
@@ -160,7 +160,7 @@ export default {
                 self.posts = [res.data.top_posts]
             }
 
-            self.users = { 'fields': fields.splice(0, fields.length - 1), 'matrix': Array.isArray(usersd) ? usersd : [usersd] }
+            // self.users = { 'fields': fields.splice(0, fields.length - 1), 'matrix': Array.isArray(usersd) ? usersd : [usersd] }
             if (Array.isArray(res.data.views)) {
                 self.views = res.data.views
             } else {

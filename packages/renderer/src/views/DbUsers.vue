@@ -21,6 +21,12 @@
                             >ФИО</th>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
+                            >Пол</th>
+                            <th
+                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
+                            >Возраст</th>
+                            <th
+                                class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 dark:text-gray-100 uppercase border-b border-gray-200 dark:border-gray-900 bg-gray-50 dark:bg-gray-800"
                             >Действия</th>
                         </tr>
                     </thead>
@@ -46,6 +52,24 @@
                                     <div
                                         class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
                                     >{{ cat.name }}</div>
+                                </div>
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
+                            >
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                    >{{ cat.gender }}</div>
+                                </div>
+                            </td>
+                            <td
+                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 dark:border-gray-900"
+                            >
+                                <div class="ml-4">
+                                    <div
+                                        class="text-sm font-medium leading-5 text-gray-900 dark:text-gray-100"
+                                    >{{ cat.age }}</div>
                                 </div>
                             </td>
 
@@ -144,11 +168,11 @@ export default {
             window.ipcRenderer.send('save-model', JSON.stringify(user))
         },
         toggleAdd() {
-            window.ipcRenderer.send('open-window', { route: "new-cat", width: 400, height: 320 })
+            window.ipcRenderer.send('open-window', { route: "new-dbuser", width: 400, height: 500 })
         },
         toggleEdit(id) {
             window.ipcRenderer.send('open-window', {
-                route: 'edit-cat/' + id, width: 400, height: 320
+                route: 'edit-dbuser/' + id, width: 400, height: 500
             })
 
         }

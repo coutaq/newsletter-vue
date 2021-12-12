@@ -3,7 +3,7 @@
         <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div class="grid grid-cols-1 gap-6">
                 <label class="block">
-                    <span class="text-gray-700">Наименование</span>
+                    <span class="text-gray-700">Наименование категории</span>
                     <input
                         v-model="cat.title"
                         type="text"
@@ -47,7 +47,7 @@ export default {
 
             this.checked = true
             if (!this.cat.title) return
-
+            console.log('tett')
             axios.put('http://109.254.85.64/newsletter/api/db/categories/' + this.id, this.cat).then((resp) => {
                 console.log(resp)
             }).catch((e) => {

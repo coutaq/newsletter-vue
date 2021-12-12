@@ -119,7 +119,7 @@ export default {
         loadData() {
             var self = this;
             axios
-                .get('http://109.254.85.64/newsletter/api/db/categories') .then(resp => {
+                .get('http://109.254.85.64/newsletter/api/db/categories').then(resp => {
                     console.log(resp)
                     if (!Array.isArray(resp.data[0])) {
                         self.categories = resp.data
